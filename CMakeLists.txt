@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 option(BUILD_SHARED_LIBS "Build shared library" OFF) 
 option(BUILD_EXAMPLE "Build example" ON)
+option(USE_OPENCV "Generate OpenCV Bindings" OFF)
 
 if(MSVC)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
@@ -78,6 +79,14 @@ include_directories(
 	include 
 	${SCREEN_CAPTURE_PLATFORM_INC} 
 )
+if(USE_OPENCV)
+find_package(OpenCV REQUIRED)
+include_directories(
+	${OpenCV_INCLUDE_DIRS} 
+)
+set(ADDITIONAL_LIBS "${ADDITIONAL_LIBS} ${OpenCV_LIBRARIES}")
+endif()
+
 add_library(${PROJECT_NAME} 
 	include/ScreenCapture.h 
 	include/internal/SCCommon.h 
@@ -90,7 +99,7 @@ add_library(${PROJECT_NAME}
  if(${BUILD_SHARED_LIBS})	
 	set_target_properties(${PROJECT_NAME} PROPERTIES DEFINE_SYMBOL SC_LITE_DLL)
 	 if(WIN32) 
-		target_link_libraries(${PROJECT_NAME} ${COMMON_LIBRARIES}  Dwmapi)
+		target_link_libraries(${PROJECT_NAME} ${COMMON_LIBRARIES}  Dwmapi ${ADDITIONAL_LIBS})
 		install (FILES $<TARGET_PDB_FILE:${PROJECT_NAME}> DESTINATION bin OPTIONAL)
 	elseif(APPLE)
 		find_package(Threads REQUIRED)
@@ -109,7 +118,8 @@ add_library(${PROJECT_NAME}
             ${coremedia_lib}
             ${avfoundation_lib}
             ${coregraphics_lib}
-            ${corevideo_lib}
+			${corevideo_lib}
+			${ADDITIONAL_LIBS}
         )
 	else()
 		find_package(X11 REQUIRED)
@@ -127,7 +137,7 @@ add_library(${PROJECT_NAME}
 			${X11_Xinerama_LIB}
 			${CMAKE_THREAD_LIBS_INIT}
 		)	
-		target_link_libraries(${PROJECT_NAME} ${COMMON_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} dl)
+		target_link_libraries(${PROJECT_NAME} ${COMMON_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} ${ADDITIONAL_LIBS} dl)
 	endif()
 endif()
 
