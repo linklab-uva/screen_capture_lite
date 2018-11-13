@@ -17,8 +17,8 @@
 #define LODEPNG_COMPILE_PNG
 #define LODEPNG_COMPILE_DISK
 #include "lodepng.h"
-#include <opencv2/core.hpp>
-#include <opencv2/imgcodecs.hpp>
+//#include <opencv2/core.hpp>
+//#include <opencv2/imgcodecs.hpp>
 #include "utils/img_utils.h"
 /////////////////////////////////////////////////////////////////////////
 
@@ -80,10 +80,10 @@ void createframegrabber()
                 //  tje_encode_to_file(s.c_str(), Width(img), Height(img), 4, (const unsigned char*)imgbuffer.get());
             })
             ->onNewFrame([&](const SL::Screen_Capture::Image &img, const SL::Screen_Capture::Monitor &monitor) {
-                auto r = realcounter.fetch_add(1);
-                auto s = std::to_string(r) + std::string("MONITORNEW_") + std::string(".jpg");
-                unsigned int height = Height(img), width = Width(img);
-                unsigned int size = height * width * sizeof(SL::Screen_Capture::ImageBGRA);
+               // auto r = realcounter.fetch_add(1);
+             //   auto s = std::to_string(r) + std::string("MONITORNEW_") + std::string(".jpg");
+              //  unsigned int height = Height(img), width = Width(img);
+             //   unsigned int size = height * width * sizeof(SL::Screen_Capture::ImageBGRA);
                // auto imgbuffer(std::make_unique<unsigned char[]>(size));
                 //ExtractAndConvertToRGBA(img, imgbuffer.get(), size);
                 //tje_encode_to_file(s.c_str(), Width(img), Height(img), 4, (const unsigned char*)imgbuffer.get());
@@ -225,10 +225,9 @@ void createwindowgrabber(std::string& srchterm)
 			/**/
             ->onNewFrame([&](const SL::Screen_Capture::Image &img, const SL::Screen_Capture::Window &window) {
                 auto r = realcounter.fetch_add(1);
-                auto s = srchterm + "/" + std::to_string(r) + std::string("WINNEW_") + std::string(".jpg");
-                auto width = Width(img), height = Height(img);
-                auto size = width * height * sizeof(SL::Screen_Capture::ImageBGRA);
-
+                auto s = "/tmp/" + srchterm + "/" + std::to_string(r) + std::string("WINNEW_") + std::string(".jpg");
+              //  auto width = Width(img), height = Height(img);
+             //   auto size = width * height * sizeof(SL::Screen_Capture::ImageBGRA);
                 SL::utils::write_image_to_file(img,s);
                 //auto imgbuffer(std::make_unique<unsigned char[]>(size));
                 //ExtractAndConvertToRGBA(img, imgbuffer.get(), size);

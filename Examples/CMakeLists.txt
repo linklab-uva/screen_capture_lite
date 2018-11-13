@@ -45,3 +45,8 @@ add_executable(${PROJECT_NAME}_example
 )
 target_link_libraries(${PROJECT_NAME}_example ${PROJECT_NAME} ${${PROJECT_NAME}_PLATFORM_LIBS} ${PROJECT_NAME}_utils) 
 add_test (NAME ${PROJECT_NAME}_example COMMAND ${PROJECT_NAME}_example)
+
+add_executable(${PROJECT_NAME}_opencv_example  
+	opencv_example.cpp
+)
+target_link_libraries(${PROJECT_NAME}_opencv_example ${PROJECT_NAME}_common ${PROJECT_NAME}_utils ${PROJECT_NAME} ${${PROJECT_NAME}_PLATFORM_LIBS} ${OpenCV_LIBRARIES}) 

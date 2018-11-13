@@ -135,22 +135,23 @@ add_library(${PROJECT_NAME}
 		target_link_libraries(${PROJECT_NAME} ${COMMON_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} dl)
 	endif()
 endif()
+find_package(OpenCV REQUIRED)
+include_directories(
+	${OpenCV_INCLUDE_DIRS} 
+)
 add_library(${PROJECT_NAME}_utils 
 src/utils/img_utils.cpp
 )
-target_link_libraries(${PROJECT_NAME}_utils ${COMMON_LIBRARIES})
+target_link_libraries(${PROJECT_NAME}_utils ${COMMON_LIBRARIES} ${OpenCV_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBRARIES})# ${${PROJECT_NAME}_PLATFORM_LIBS})
 
-if(USE_OPENCV)
-	find_package(OpenCV REQUIRED)
-	include_directories(
-		${OpenCV_INCLUDE_DIRS} 
-	)
-	target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBRARIES})
-	target_link_libraries(${PROJECT_NAME}_utils ${OpenCV_LIBRARIES})
-	target_compile_definitions(${PROJECT_NAME}_utils PRIVATE WITH_OPENCV=1)
-endif()
+add_library(${PROJECT_NAME}_common
+src/common/opencv_display_configuration.cpp
+)
+target_link_libraries(${PROJECT_NAME}_common ${PROJECT_NAME}_utils ${${PROJECT_NAME}_PLATFORM_LIBS} ${PROJECT_NAME} ${OpenCV_LIBRARIES})
 
-install (TARGETS ${PROJECT_NAME}  
+
+install (TARGETS ${PROJECT_NAME} ${PROJECT_NAME}_utils ${PROJECT_NAME}_common
 	RUNTIME DESTINATION bin
 	ARCHIVE DESTINATION lib
 	LIBRARY DESTINATION lib
@@ -161,4 +162,4 @@ install (FILES
 	DESTINATION include
 )
 enable_testing() 
-add_subdirectory(Example) 
+add_subdirectory(Examples) 

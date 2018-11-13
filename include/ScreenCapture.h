@@ -101,13 +101,18 @@ namespace Screen_Capture {
         assert(dst_size >= static_cast<size_t>(Width(img) * Height(img) * sizeof(ImageBGRA)));
         auto startdst = dst;
         auto startsrc = StartSrc(img);
+        auto width = Width(img);
+        auto height = Height(img);
+        auto pixel_size = sizeof(ImageBGRA);
+        auto image_size = width * height * pixel_size;
+
         if (isDataContiguous(img)) { // no padding, the entire copy can be a single memcpy call
-            memcpy(startdst, startsrc, Width(img) * Height(img) * sizeof(ImageBGRA));
+            memcpy(startdst, startsrc, image_size);
         }
         else {
-            for (auto i = 0; i < Height(img); i++) {
-                memcpy(startdst, startsrc, sizeof(ImageBGRA) * Width(img));
-                startdst += sizeof(ImageBGRA) * Width(img); // advance to the next row
+            for (auto i = 0; i < height; i++) {
+                memcpy(startdst, startsrc, pixel_size * width);
+                startdst += pixel_size * width; // advance to the next row
                 startsrc = GotoNextRow(img, startsrc);      // advance to the next row
             }
         }
