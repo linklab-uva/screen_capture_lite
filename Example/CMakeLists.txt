@@ -1,4 +1,4 @@
-project(screen_capture_example)
+#project(screen_capture_example)
 
 if(WIN32)
 	set(${PROJECT_NAME}_PLATFORM_LIBS Dwmapi)
@@ -39,9 +39,9 @@ else()
 	)
 endif()
 
-add_executable(${PROJECT_NAME}  
+add_executable(${PROJECT_NAME}_example  
 	lodepng.cpp
 	Screen_Capture_Example.cpp
 )
-target_link_libraries(${PROJECT_NAME} screen_capture_lite ${${PROJECT_NAME}_PLATFORM_LIBS}) 
-add_test (NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME})
+target_link_libraries(${PROJECT_NAME}_example ${PROJECT_NAME} ${${PROJECT_NAME}_PLATFORM_LIBS} ${PROJECT_NAME}_utils) 
+add_test (NAME ${PROJECT_NAME}_example COMMAND ${PROJECT_NAME}_example)

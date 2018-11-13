@@ -8,7 +8,7 @@ set (CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 option(BUILD_SHARED_LIBS "Build shared library" ON) 
 option(BUILD_EXAMPLE "Build example" ON)
-option(USE_OPENCV "Generate OpenCV Bindings" OFF)
+option(USE_OPENCV "Generate OpenCV Bindings" ON)
 
 if(MSVC)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
@@ -135,12 +135,19 @@ add_library(${PROJECT_NAME}
 		target_link_libraries(${PROJECT_NAME} ${COMMON_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} dl)
 	endif()
 endif()
+add_library(${PROJECT_NAME}_utils 
+src/utils/img_utils.cpp
+)
+target_link_libraries(${PROJECT_NAME}_utils ${COMMON_LIBRARIES})
+
 if(USE_OPENCV)
 	find_package(OpenCV REQUIRED)
 	include_directories(
 		${OpenCV_INCLUDE_DIRS} 
 	)
 	target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBRARIES})
+	target_link_libraries(${PROJECT_NAME}_utils ${OpenCV_LIBRARIES})
+	target_compile_definitions(${PROJECT_NAME}_utils PRIVATE WITH_OPENCV=1)
 endif()
 
 install (TARGETS ${PROJECT_NAME}  
