@@ -21,9 +21,9 @@ namespace Screen_Capture {
         if (pid != GetCurrentProcessId()) {
             auto textlen = GetWindowTextA(hwnd, w.Name, sizeof(w.Name));
             // clamp the bounds
-            textlen = std::max(textlen - 1, static_cast<int>(sizeof(w.Name)) - 1);
-            textlen = std::min(textlen, 0);
-            w.Name[textlen] = '\n';
+           // textlen = std::max(textlen - 1, static_cast<int>(sizeof(w.Name)) - 1);
+           // textlen = std::min(textlen, 0);
+           // w.Name[textlen] = '\n';
         }
 
         srch *s = (srch *)lParam;
