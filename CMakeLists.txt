@@ -4,8 +4,11 @@ project(screen_capture_lite)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
-option(BUILD_SHARED_LIBS "Build shared library" OFF) 
+set (CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+option(BUILD_SHARED_LIBS "Build shared library" ON) 
 option(BUILD_EXAMPLE "Build example" ON)
+option(USE_OPENCV "Generate OpenCV Bindings" ON)
 
 if(MSVC)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
@@ -78,6 +81,8 @@ include_directories(
 	include 
 	${SCREEN_CAPTURE_PLATFORM_INC} 
 )
+
+
 add_library(${PROJECT_NAME} 
 	include/ScreenCapture.h 
 	include/internal/SCCommon.h 
@@ -109,7 +114,7 @@ add_library(${PROJECT_NAME}
             ${coremedia_lib}
             ${avfoundation_lib}
             ${coregraphics_lib}
-            ${corevideo_lib}
+			${corevideo_lib}
         )
 	else()
 		find_package(X11 REQUIRED)
@@ -130,8 +135,23 @@ add_library(${PROJECT_NAME}
 		target_link_libraries(${PROJECT_NAME} ${COMMON_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} dl)
 	endif()
 endif()
+find_package(OpenCV REQUIRED)
+include_directories(
+	${OpenCV_INCLUDE_DIRS} 
+)
+add_library(${PROJECT_NAME}_utils 
+src/utils/img_utils.cpp
+)
+target_link_libraries(${PROJECT_NAME}_utils ${COMMON_LIBRARIES} ${OpenCV_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBRARIES})
 
-install (TARGETS ${PROJECT_NAME}  
+add_library(${PROJECT_NAME}_common
+src/common/opencv_display_configuration.cpp
+)
+target_link_libraries(${PROJECT_NAME}_common ${PROJECT_NAME}_utils ${PROJECT_NAME} ${OpenCV_LIBRARIES})
+
+
+install (TARGETS ${PROJECT_NAME} ${PROJECT_NAME}_utils ${PROJECT_NAME}_common
 	RUNTIME DESTINATION bin
 	ARCHIVE DESTINATION lib
 	LIBRARY DESTINATION lib
@@ -142,4 +162,4 @@ install (FILES
 	DESTINATION include
 )
 enable_testing() 
-add_subdirectory(Example) 
+add_subdirectory(Examples) 

@@ -99,20 +99,45 @@ namespace Screen_Capture {
     inline void Extract(const Image &img, unsigned char *dst, size_t dst_size)
     {
         assert(dst_size >= static_cast<size_t>(Width(img) * Height(img) * sizeof(ImageBGRA)));
-        auto startdst = dst;
+        unsigned char* startdst = dst;
         auto startsrc = StartSrc(img);
+        auto width = Width(img);
+        auto height = Height(img);
+        auto pixel_size = sizeof(ImageBGRA);
+        auto image_size = width * height * pixel_size;
+
         if (isDataContiguous(img)) { // no padding, the entire copy can be a single memcpy call
-            memcpy(startdst, startsrc, Width(img) * Height(img) * sizeof(ImageBGRA));
+            memcpy(startdst, startsrc, image_size);
         }
         else {
-            for (auto i = 0; i < Height(img); i++) {
-                memcpy(startdst, startsrc, sizeof(ImageBGRA) * Width(img));
-                startdst += sizeof(ImageBGRA) * Width(img); // advance to the next row
+            for (auto i = 0; i < height; i++) {
+                memcpy(startdst, startsrc, pixel_size * width);
+                startdst += pixel_size * width; // advance to the next row
                 startsrc = GotoNextRow(img, startsrc);      // advance to the next row
             }
         }
     }
+    inline void ExtractMove(const Image &img, unsigned char *dst, size_t dst_size)
+    {
+        assert(dst_size >= static_cast<size_t>(Width(img) * Height(img) * sizeof(ImageBGRA)));
+        auto startdst = dst;
+        auto startsrc = StartSrc(img);
+        auto width = Width(img);
+        auto height = Height(img);
+        auto pixel_size = sizeof(ImageBGRA);
+        auto image_size = width * height * pixel_size;
 
+        if (isDataContiguous(img)) { // no padding, the entire copy can be a single memcpy call
+            memmove(startdst, startsrc, image_size);
+        }
+        else {
+            for (auto i = 0; i < height; i++) {
+                memmove(startdst, startsrc, pixel_size * width);
+                startdst += pixel_size * width; // advance to the next row
+                startsrc = GotoNextRow(img, startsrc);      // advance to the next row
+            }
+        }
+    }
     class Timer {
         using Clock =
             std::conditional<std::chrono::high_resolution_clock::is_steady, std::chrono::high_resolution_clock, std::chrono::steady_clock>::type;
