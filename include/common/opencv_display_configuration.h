@@ -18,7 +18,7 @@ namespace SL
                 std::shared_ptr< SL::Screen_Capture::ICaptureConfiguration<SL::Screen_Capture::WindowCaptureCallback> > capture_config;
                 std::shared_ptr<SL::Screen_Capture::IScreenCaptureManager> framegrabber;
                 std::vector<std::string> window_names;
-                std::string search_string;
+                const std::string search_string;
                 unsigned long counter;
         };
     }

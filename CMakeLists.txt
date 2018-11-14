@@ -143,12 +143,12 @@ add_library(${PROJECT_NAME}_utils
 src/utils/img_utils.cpp
 )
 target_link_libraries(${PROJECT_NAME}_utils ${COMMON_LIBRARIES} ${OpenCV_LIBRARIES})
-target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBRARIES})# ${${PROJECT_NAME}_PLATFORM_LIBS})
+target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBRARIES})
 
 add_library(${PROJECT_NAME}_common
 src/common/opencv_display_configuration.cpp
 )
-target_link_libraries(${PROJECT_NAME}_common ${PROJECT_NAME}_utils ${${PROJECT_NAME}_PLATFORM_LIBS} ${PROJECT_NAME} ${OpenCV_LIBRARIES})
+target_link_libraries(${PROJECT_NAME}_common ${PROJECT_NAME}_utils ${PROJECT_NAME} ${OpenCV_LIBRARIES})
 
 
 install (TARGETS ${PROJECT_NAME} ${PROJECT_NAME}_utils ${PROJECT_NAME}_common

@@ -33,28 +33,36 @@ namespace SL
             }
             void OpenCVDisplayCapture::newWindowCB(const SL::Screen_Capture::Image &img, const SL::Screen_Capture::Window &window)
             {
-              //  std::cout<< "Got new image" << std::endl;
                 cv::Mat im = SL::utils::convert_to_cv(img);
                 cv::imshow("asdf",im);
-                cv::imwrite("/tmp/steam/" + std::to_string(counter++) + ".jpg",im);
+                cv::imwrite("~/tmpfsfolder/"+ search_string + "/" + std::to_string(counter++) + ".jpg",im);
             }
             std::vector<SL::Screen_Capture::Window> OpenCVDisplayCapture::findWindowsCB(std::string& srchterm)
             {
                 auto windows = SL::Screen_Capture::GetWindows();
                 std::transform(srchterm.begin(), srchterm.end(), srchterm.begin(), [](char c) { return std::tolower(c, std::locale()); });
+                std::vector<SL::Screen_Capture::Window> rtn;
                 std::vector<SL::Screen_Capture::Window> filtereditems;
-                for (auto &a : windows) {
+                unsigned int length = windows.size();
+                unsigned int filtered_item_number = 0;
+                for (unsigned int i = 0; i < length; i++) {
+                    SL::Screen_Capture::Window a = windows.at(i);
                     std::string name = a.Name;
-                    std::cout << "Found a window with name: " << name << std::endl;
+                   // std::cout << "Found a window with name: " << name << std::endl;
                     window_names.push_back(name);
                     std::transform(name.begin(), name.end(), name.begin(), [](char c) { return std::tolower(c, std::locale()); });
                     //if (name.compare(srchterm) == 0) {
                     if (name.find(srchterm) != std::string::npos) {
                         filtereditems.push_back(a);
-                        std::cout << "ADDING WINDOW  Height " << a.Size.y << "  Width  " << a.Size.x << "   " << a.Name << std::endl;
+                        printf("[%d] For %s\n", filtered_item_number++, name.c_str());
                     }
                 }
-                return filtereditems;
+                printf("\nWhich windows would you like to track?\n");
+                unsigned int blah;
+                std::cin >> blah;
+                rtn.push_back(filtereditems.at(blah));
+
+                return rtn;
             }
     }
 }

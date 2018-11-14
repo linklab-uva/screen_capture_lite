@@ -15,8 +15,9 @@ int main(int argc, char** argv)
     }
     SL::common::OpenCVDisplayCapture capture(search);
 
-    cv::namedWindow("asdf",cv::WINDOW_AUTOSIZE);
     capture.start();
+  
+    cv::namedWindow("asdf",cv::WINDOW_AUTOSIZE);
 
     unsigned int time;
     if(argc>2)
