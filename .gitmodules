@@ -1,0 +1,3 @@
+[submodule "modules/CMake"]
+	path = modules/CMake
+	url = https://github.com/Eyescale/CMake.git
