@@ -4,6 +4,12 @@ project(screen_capture_lite)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
+set(PROJECT_VERISON_MAJOR "0")
+set(PROJECT_VERSION_MINOR "0")
+set(PROJECT_VERSION_PATCH "0")
+set(VERSION_MAJOR ${PROJECT_VERSION_MAJOR})
+set(VERSION_MINOR ${PROJECT_VERSION_MINOR})
+set(VERSION_PATCH ${PROJECT_VERSION_PATCH})
 option(BUILD_SHARED_LIBS "Build shared library" OFF) 
 option(BUILD_EXAMPLE "Build example" ON)
 
@@ -143,3 +149,20 @@ install (FILES
 )
 enable_testing() 
 add_subdirectory(Example) 
+# * UPPER_PROJECT_NAME           used as "NAME" for other input below
+# * LOWER_PROJECT_NAME           used as package name on Linux
+# * NAME_LICENSE                 package license (e.g. "LGPL")
+# * NAME_MAINTAINER              contact information (e.g. "Name <name@xy.org>")
+# * NAME_URL                     homepage of the project (from GitHubInfo.cmake)
+# * NAME_VENDOR                  organisation name (e.g. "Eyescale")
+# * NAME_PACKAGE_DEB_DEPENDS     list of required deb packages
+# * NAME_PACKAGE_RPM_DEPENDS     list of required rpm packages
+# * NAME_PACKAGE_REPLACES        list of packages replaced by this (optional)
+# * NAME_PACKAGE_CONFLICTS       list of conflicting packages (optional)
+# * NAME_PACKAGE_USE_ABI         add ABI version to package name (default: OFF)
+#set(UPPER_PROJECT_NAME ${PROJECT_NAME})
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/modules/CMake)
+include(Common)
+set(${PROJECT_NAME}_LICENSE "MIT")
+include(CommonCPack)
+include(CommonPackageConfig)

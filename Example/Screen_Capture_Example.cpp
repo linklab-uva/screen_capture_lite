@@ -150,9 +150,9 @@ void createpartialframegrabber()
                 auto size = Width(img) * Height(img) * sizeof(SL::Screen_Capture::ImageBGRA);
                 assert(Height(img) == 512);
                 assert(Width(img) == 512);
-                // auto imgbuffer(std::make_unique<unsigned char[]>(size));
-                // ExtractAndConvertToRGBA(img, imgbuffer.get(), size);
-                // tje_encode_to_file(s.c_str(), Width(img), Height(img), 4, (const unsigned char*)imgbuffer.get());
+                auto imgbuffer(std::make_unique<unsigned char[]>(size));
+                ExtractAndConvertToRGBA(img, imgbuffer.get(), size);
+                tje_encode_to_file(s.c_str(), Width(img), Height(img), 4, (const unsigned char*)imgbuffer.get());
                 if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - onNewFramestart).count() >=
                     1000) {
                     std::cout << "onNewFrame fps" << onNewFramecounter << std::endl;
